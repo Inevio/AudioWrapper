@@ -74,8 +74,16 @@
       this.player = new Media( url, function(){
         stopPositionInterval()
         eventEmitter.trigger( 'stop', [] )
-        eventEmitter.trigger( 'ended', [] )
-      }, function(){
+
+        this.player.getCurrentPosition( function( position ){
+
+          if( position.toFixed( 2 ) === this.player.getDuration().toFixed( 2 ) ){
+            eventEmitter.trigger( 'ended', [] )
+          }
+
+        }.bind( this ))
+
+      }.bind( this ), function(){
         //console.log( 'B', arguments )
       }, function( status ){
 
@@ -124,7 +132,7 @@
       }.bind(this))
 
       // Force load
-      this.player.play()
+      this.player.play({ playAudioWhenScreenIsLocked : false })
 
     }else{
 
@@ -181,7 +189,7 @@
 
   }
 
-  Audio.prototype.play = function(){
+  Audio.prototype.play = function( playInBackground ){
 
     if( this.mediaMode ){
 
@@ -189,7 +197,7 @@
 
         this.waitingPlay = true
 
-        this.player.play()
+        this.player.play({ playAudioWhenScreenIsLocked : playInBackground })
 
       }
 
