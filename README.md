@@ -28,13 +28,19 @@ audio.stop();
 ### `seek( Float second )`
 Sets the current position within an audio file.
 ```js
-audio.seekTo( 42 );
+audio.seek( 42 );
 ```
 
 ### `volume( Float volume )`
-Set the volume for an audio file. The value must be within the range of 0.0 to 1.0
+Set the volume for an audio file. The value must be within the range of 0.0 to 1.0.
 ```js
 audio.setVolume( 0.5 );
+```
+
+### `remove()`
+Remove the underlying operating system's audio resources. This is particularly important for mobile devices. Applications should call the release function for any Media resource that is no longer needed.
+```js
+audio.remove();
 ```
 
 ### `on( String eventName, Function handlerFn )`

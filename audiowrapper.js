@@ -225,6 +225,26 @@
 
   }
 
+  Audio.prototype.remove = function(){
+
+    if( this.mediaMode ){
+      this.player.release()
+    }else{
+      this.player.remove()
+    }
+
+  }
+
+  Audio.prototype.seek = function( second ){
+
+    if( this.mediaMode ){
+        this.player.seekTo( parseInt( second * 1000 ) )
+    }else{
+      this.player[0].currentTime = second
+    }
+
+  }
+
   Audio.prototype.stop = function(){
 
     if( this.mediaMode ){
@@ -242,16 +262,6 @@
       this.player[0].pause()
       this.player[0].currentTime = 0
 
-    }
-
-  }
-
-  Audio.prototype.seek = function( second ){
-
-    if( this.mediaMode ){
-        this.player.seekTo( parseInt( second * 1000 ) )
-    }else{
-      this.player[0].currentTime = second
     }
 
   }
