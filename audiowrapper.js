@@ -1,6 +1,8 @@
 
 (function(){
 
+  var MAX_ITERATION = 20
+
   var EventEmitter = function(){
     this.events = {}
   }
@@ -77,7 +79,7 @@
 
         this.player.getCurrentPosition( function( position ){
 
-          if( position.toFixed( 2 ) === this.player.getDuration().toFixed( 2 ) ){
+          if( position < 0 || position.toFixed( 2 ) === this.player.getDuration().toFixed( 2 ) || ( position === 0 && ( 1 / position) === -Infinity ) ){
             eventEmitter.trigger( 'ended', [] )
           }
 
@@ -92,7 +94,20 @@
           this.waitingStart = false
 
           this.player.pause()
-          eventEmitter.trigger( 'ready', [ this.player.getDuration() ])
+
+          var iteration = 0
+          var checkReady = function(){
+
+            if( iteration < MAX_ITERATION && this.player.getDuration() < 0 ){
+              iteration++
+              return setTimeout( checkReady, 100 )
+            }
+
+            eventEmitter.trigger( 'ready', [ this.player.getDuration() ])
+
+          }.bind(this)
+
+          checkReady()
 
         }
 
